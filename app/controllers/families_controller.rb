@@ -4,15 +4,14 @@ class FamiliesController < ApplicationController
   end
 
   def create
-    @family = Family.new
+    @family = Family.new(family_params)
      unless @family.valid?
        render :new, status: :unprocessable_entity and return
      end
     session["family.regist_data"] = {family: @family.attributes}
-    binding.pry
-    session["family.regist_data"][:user]["password"] = params[:user][:password]
-    binding.pry
+
     @user = @family.build_user
+    binding.pry
     render :new_user, status: :accepted
   end
 
@@ -31,6 +30,10 @@ class FamiliesController < ApplicationController
   end
 
   private
+
+  def family_params
+    params.require(:family).permit(:name)
+  end
 
   def user_params
     params.require(:user).permit(:name)
