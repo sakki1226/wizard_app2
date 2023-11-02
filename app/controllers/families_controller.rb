@@ -1,4 +1,8 @@
 class FamiliesController < ApplicationController
+
+  def index
+  end
+
   def new
     @family = Family.new
   end
@@ -10,20 +14,20 @@ class FamiliesController < ApplicationController
      end
     session["family.regist_data"] = {family: @family.attributes}
 
-    @user = @family.build_user
-    binding.pry
-    render :new_user, status: :accepted
+    @user = @family.users.build
+    render template: 'devise/registrations/new_user', status: :accepted
   end
 
   def create_user
     @family = Family.new(session["family.regist_data"])
+    binding.pry
     @user = User.new(user_params)
       unless @user.valid?
         render :new_user, status: :unprocessable_entity and return
       end
-    @family.build_user(@user.attributes)
+    @family.users.build(@user.attributes)
     @family.save
-    session["devise.regist_data"]["family"].clear
+    session["family.regist_data"].clear
     sign_in(:family, @family)
 
     redirect_to root_path
