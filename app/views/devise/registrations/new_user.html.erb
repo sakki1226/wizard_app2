@@ -1,6 +1,6 @@
 <h2>Sign up</h2>
 
-<%= form_for @user do |f| %>
+<%= form_for(@user, url: user_path) do |f| %>
   <%= render "devise/shared/error_messages", resource: @user %>
 
   <div class="field">
